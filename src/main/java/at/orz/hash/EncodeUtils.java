@@ -24,6 +24,32 @@ import java.math.BigInteger;
  */
 public class EncodeUtils {
 	
+	public static interface EndianReader {
+		int toInt(byte[] b, int i);
+		long toLong(byte[] b, int i);
+	}
+	
+	private static class LittleEndianReader implements EndianReader {
+		public int toInt(byte[] b, int i) {
+			return toIntLE(b, i);
+		}
+		public long toLong(byte[] b, int i) {
+			return toLongLE(b, i);
+		}
+	}
+	
+	private static class BigEndianReader implements EndianReader {
+		public int toInt(byte[] b, int i) {
+			return toIntBE(b, i);
+		}
+		public long toLong(byte[] b, int i) {
+			return toLongBE(b, i);
+		}
+	}
+	
+	public static final LittleEndianReader LEReader = new LittleEndianReader();
+	public static final BigEndianReader BEReader = new BigEndianReader();
+	
 	/**
 	 * byte配列のi番目から4バイト読み取り、BigEndianとみなした整数を返す。
 	 * @param b データ

@@ -16,6 +16,8 @@
 
 package at.orz.hash;
 
+import at.orz.hash.EncodeUtils.EndianReader;
+
 /**
  * @author tamtam180 - kirscheless at gmail.com
  *
@@ -30,6 +32,7 @@ public class XXHash {
 	
 	public static int digestSmall(byte[] data, int seed, boolean bigendian) {
 		
+		final EndianReader er = bigendian ? EncodeUtils.BEReader : EncodeUtils.LEReader;
 		final int len = data.length;
 		final int bEnd = len;
 		final int limit = bEnd - 4;
@@ -39,7 +42,7 @@ public class XXHash {
 		int i = 0;
 		
 		while (i < limit) {
-			crc += (bigendian ? EncodeUtils.toIntBE(data, i) : EncodeUtils.toIntLE(data, i)) + (idx++);
+			crc += er.toInt(data, i) + (idx++);
 			crc += Integer.rotateLeft(crc, 17) * PRIME4;
 			crc *= PRIME1;
 			i += 4;
@@ -71,6 +74,7 @@ public class XXHash {
 			return digestSmall(data, seed, bigendian);
 		}
 		
+		final EndianReader er = bigendian ? EncodeUtils.BEReader : EncodeUtils.LEReader;
 		final int bEnd = len;
 		final int limit = bEnd - 16;
 		int v1 = seed + PRIME1;
@@ -81,13 +85,13 @@ public class XXHash {
 		int i = 0;
 		int crc = 0;
 		while (i < limit) {
-			v1 = Integer.rotateLeft(v1, 13) + (bigendian ? EncodeUtils.toIntBE(data, i) : EncodeUtils.toIntLE(data, i));
+			v1 = Integer.rotateLeft(v1, 13) + er.toInt(data, i);
 			i += 4;
-			v2 = Integer.rotateLeft(v2, 11) + (bigendian ? EncodeUtils.toIntBE(data, i) : EncodeUtils.toIntLE(data, i));
+			v2 = Integer.rotateLeft(v2, 11) + er.toInt(data, i);
 			i += 4;
-			v3 = Integer.rotateLeft(v3, 17) + (bigendian ? EncodeUtils.toIntBE(data, i) : EncodeUtils.toIntLE(data, i));
+			v3 = Integer.rotateLeft(v3, 17) + er.toInt(data, i);
 			i += 4;
-			v4 = Integer.rotateLeft(v4, 19) + (bigendian ? EncodeUtils.toIntBE(data, i) : EncodeUtils.toIntLE(data, i));
+			v4 = Integer.rotateLeft(v4, 19) + er.toInt(data, i);
 			i += 4;
 		}
 		
@@ -102,13 +106,13 @@ public class XXHash {
 		v3 *= PRIME1;
 		v4 *= PRIME1;
 		
-		v1 += (bigendian ? EncodeUtils.toIntBE(data, i) : EncodeUtils.toIntLE(data, i));
-		i+=4;
-		v2 += (bigendian ? EncodeUtils.toIntBE(data, i) : EncodeUtils.toIntLE(data, i));
-		i+=4;
-		v3 += (bigendian ? EncodeUtils.toIntBE(data, i) : EncodeUtils.toIntLE(data, i));
-		i+=4;
-		v4 += (bigendian ? EncodeUtils.toIntBE(data, i) : EncodeUtils.toIntLE(data, i));
+		v1 += er.toInt(data, i);
+		i += 4;
+		v2 += er.toInt(data, i);
+		i += 4;
+		v3 += er.toInt(data, i);
+		i += 4;
+		v4 += er.toInt(data, i);
 		
 		v1 *= PRIME2;
 		v2 *= PRIME2;
@@ -143,6 +147,7 @@ public class XXHash {
 			return digestSmall(data, seed, bigendian);
 		}
 		
+		final EndianReader er = bigendian ? EncodeUtils.BEReader : EncodeUtils.LEReader;
 		final int bEnd = len;
 		final int limit = bEnd - 16;
 		int v1 = seed + PRIME1;
@@ -156,22 +161,22 @@ public class XXHash {
 		while (i < limit) {
 			v1 += Integer.rotateLeft(v1, 13);
 			v1 *= PRIME1;
-			v1 += (bigendian ? EncodeUtils.toIntBE(data, i) : EncodeUtils.toIntLE(data, i));
+			v1 += er.toInt(data, i);
 			i += 4;
 
 			v2 += Integer.rotateLeft(v2, 11);
 			v2 *= PRIME1;
-			v2 += (bigendian ? EncodeUtils.toIntBE(data, i) : EncodeUtils.toIntLE(data, i));
+			v2 += er.toInt(data, i);
 			i += 4;
 
 			v3 += Integer.rotateLeft(v3, 17);
 			v3 *= PRIME1;
-			v3 += (bigendian ? EncodeUtils.toIntBE(data, i) : EncodeUtils.toIntLE(data, i));
+			v3 += er.toInt(data, i);
 			i += 4;
 
 			v4 += Integer.rotateLeft(v4, 19);
 			v4 *= PRIME1;
-			v4 += (bigendian ? EncodeUtils.toIntBE(data, i) : EncodeUtils.toIntLE(data, i));
+			v4 += er.toInt(data, i);
 			i += 4;
 
 		}
@@ -187,13 +192,13 @@ public class XXHash {
 		v3 *= PRIME1;
 		v4 *= PRIME1;
 		
-		v1 += (bigendian ? EncodeUtils.toIntBE(data, i) : EncodeUtils.toIntLE(data, i));
-		i+=4;
-		v2 += (bigendian ? EncodeUtils.toIntBE(data, i) : EncodeUtils.toIntLE(data, i));
-		i+=4;
-		v3 += (bigendian ? EncodeUtils.toIntBE(data, i) : EncodeUtils.toIntLE(data, i));
-		i+=4;
-		v4 += (bigendian ? EncodeUtils.toIntBE(data, i) : EncodeUtils.toIntLE(data, i));
+		v1 += er.toInt(data, i);
+		i += 4;
+		v2 += er.toInt(data, i);
+		i += 4;
+		v3 += er.toInt(data, i);
+		i += 4;
+		v4 += er.toInt(data, i);
 		
 		v1 *= PRIME2;
 		v2 *= PRIME2;
